@@ -10,20 +10,20 @@ import java.net.HttpURLConnection
 import java.net.URL
 import jenkins.model.Jenkins
 
-def getCredentials = {description ->
+def getCredentials(description) {
     def credentials = CredentialsProvider.lookupCredentials(
         StandardUsernameCredentials.class, Jenkins.instance, null, null )
 
     return credentials.findResult {it.description == description ? it : null}
 }
 
-def splitReponame = {reponame ->
+def splitReponame(reponame) {
     def parts = reponame.split("/")
     def repoKey = parts[0].split("\\.")[0]
     return new Tuple(repoKey, parts[1])
 }
 
-def getTagsList = {baseUrl, repoKey, imagename, auth ->
+def getTagsList(baseUrl, repoKey, imagename, auth) {
     def url = String.format("%s/api/docker/%s/v2/%s/tags/list", baseUrl,
         repoKey, imagename)
     def connection = url.toURL().openConnection()
@@ -32,7 +32,7 @@ def getTagsList = {baseUrl, repoKey, imagename, auth ->
     return connection.getInputStream().getText()
 }
 
-def parseJson = {json ->
+def parseJson(json) {
     def jsonSlurper = new JsonSlurper()
     return jsonSlurper.parseText(json)
 }
