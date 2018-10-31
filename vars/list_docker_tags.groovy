@@ -37,7 +37,7 @@ def parseJson = {json ->
     return jsonSlurper.parseText(json)
 }
 
-def main = {
+def call() {
     def baseUrl = "https://artifactory.dbc.dk/artifactory"
     def artifactoryLogin = "isworker login for artifactory"
     def tagPrefix = "DIT-"
@@ -61,5 +61,3 @@ def main = {
         .sort{a, b -> b - a}.collect{it = tagPrefix + it}
     return list
 }
-
-return main()
