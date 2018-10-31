@@ -37,11 +37,9 @@ def parseJson(json) {
     return jsonSlurper.parseText(json)
 }
 
-def call() {
+def call(reponame, tagPrefix = "DIT-") {
     def baseUrl = "https://artifactory.dbc.dk/artifactory"
     def artifactoryLogin = "isworker login for artifactory"
-    def tagPrefix = "DIT-"
-    def reponame = "docker-io.dbc.dk/dbc-payara-flowstore"
 
     def c = getCredentials(artifactoryLogin)
     if(c == null) {
