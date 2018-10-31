@@ -41,12 +41,13 @@ def call(reponame, tagPrefix = "DIT-") {
     def baseUrl = "https://artifactory.dbc.dk/artifactory"
     def artifactoryLogin = "isworker login for artifactory"
 
-    def c = getCredentials(artifactoryLogin)
-    if(c == null) {
+    def credentials = getCredentials(artifactoryLogin)
+    if(credentials == null) {
         return "counldn't get credentials"
     }
 
-    def auth = String.format("%s:%s", c.username, c.password).bytes.encodeBase64().toString()
+    def auth = String.format("%s:%s", credentials.username,
+        credentials.password).bytes.encodeBase64().toString()
     def repoTuple = splitReponame(reponame)
     def json = parseJson(getTagsList(baseUrl, repoTuple.get(0),
         repoTuple.get(1), auth))
