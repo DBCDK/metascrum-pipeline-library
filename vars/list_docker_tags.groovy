@@ -10,20 +10,20 @@ import java.net.HttpURLConnection
 import java.net.URL
 import jenkins.model.Jenkins
 
-def getCredentials = {description ->
+def getCredentials(description) {
     def credentials = CredentialsProvider.lookupCredentials(
         StandardUsernameCredentials.class, Jenkins.instance, null, null )
 
     return credentials.findResult {it.description == description ? it : null}
 }
 
-def splitReponame = {reponame ->
+def splitReponame(reponame) {
     def parts = reponame.split("/")
     def repoKey = parts[0].split("\\.")[0]
     return new Tuple(repoKey, parts[1])
 }
 
-def getTagsList = {baseUrl, repoKey, imagename, auth ->
+def getTagsList(baseUrl, repoKey, imagename, auth) {
     def url = String.format("%s/api/docker/%s/v2/%s/tags/list", baseUrl,
         repoKey, imagename)
     def connection = url.toURL().openConnection()
@@ -32,23 +32,22 @@ def getTagsList = {baseUrl, repoKey, imagename, auth ->
     return connection.getInputStream().getText()
 }
 
-def parseJson = {json ->
+def parseJson(json) {
     def jsonSlurper = new JsonSlurper()
     return jsonSlurper.parseText(json)
 }
 
-def main = {
+def call(reponame, tagPrefix = "DIT-") {
     def baseUrl = "https://artifactory.dbc.dk/artifactory"
     def artifactoryLogin = "isworker login for artifactory"
-    def tagPrefix = "DIT-"
-    def reponame = "docker-io.dbc.dk/dbc-payara-flowstore"
 
-    def c = getCredentials(artifactoryLogin)
-    if(c == null) {
+    def credentials = getCredentials(artifactoryLogin)
+    if(credentials == null) {
         return "counldn't get credentials"
     }
 
-    def auth = String.format("%s:%s", c.username, c.password).bytes.encodeBase64().toString()
+    def auth = String.format("%s:%s", credentials.username,
+        credentials.password).bytes.encodeBase64().toString()
     def repoTuple = splitReponame(reponame)
     def json = parseJson(getTagsList(baseUrl, repoTuple.get(0),
         repoTuple.get(1), auth))
@@ -61,5 +60,3 @@ def main = {
         .sort{a, b -> b - a}.collect{it = tagPrefix + it}
     return list
 }
-
-return main()
