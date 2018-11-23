@@ -4,12 +4,11 @@
 // See license text at https://opensource.dbc.dk/licenses/gpl-3.0
 
 def call(String deployment_path, String docker_tag, String kubecert, String namespace,
-		Closure checkout_scm_body, steps, String template_keys_path = "") {
+		steps, String template_keys_path = "") {
 	String template_keys_string = ""
 	if(template_keys_path != "") {
 		template_keys_string = "--template-keys-file ${template_keys_path}"
 	}
-	checkout_scm_body()
 	steps.sh """#!/usr/bin/env bash
 		set -xe
 		rm -rf ENV
