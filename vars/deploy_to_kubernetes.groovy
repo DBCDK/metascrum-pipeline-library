@@ -7,8 +7,9 @@ def call(String deployment_path, String kubecert, String namespace,
 		steps) {
 	steps.sh """#!/usr/bin/env bash
 		set -xe
-		DEPLOYMENT_NAME=\$(kubectl get -n ${namespace} -f ${deployment_path} -o name | grep deployment)
-		kubectl --kubeconfig ${kubecert} apply -f ${deployment_path} -n ${namespace}
-		kubectl rollout status deployment -n ${namespace} \$DEPLOYMENT_NAME
+		KUBECTL=\"kubectl --kubeconfig ${kubecert} -n ${namespace}\"
+		DEPLOYMENT_NAME=\$(\$KUBECTL get -f ${deployment_path} -o name | grep deployment)
+		\$KUBECTL apply -f ${deployment_path}
+		\$KUBECTL rollout status deployment \$DEPLOYMENT_NAME
 	"""
 }
