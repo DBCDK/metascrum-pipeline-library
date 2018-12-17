@@ -10,6 +10,6 @@ def call(String deployment_path, String kubecert, String namespace,
 		KUBECTL=\"kubectl --kubeconfig ${kubecert} -n ${namespace}\"
 		DEPLOYMENT_NAME=\$(\$KUBECTL get -f ${deployment_path} -o name | grep deployment)
 		\$KUBECTL apply -f ${deployment_path}
-		\$KUBECTL rollout status deployment \$DEPLOYMENT_NAME
+		\$KUBECTL rollout status \$DEPLOYMENT_NAME
 	"""
 }
