@@ -1,8 +1,8 @@
 package dk.dbc.metascrum.jenkins
 
 class Maven implements Serializable {
-    static def verify() {
-        println "Building and stuff..."
+    static def verify(script) {
+        script.echo "Building and stuff..."
 //        step.sh "mvn -D sourcepath=src/main/java verify pmd:pmd javadoc:aggregate"
 //        step.junit testResults: '**/target/*-reports/TEST-*.xml'
 //        step.script {
