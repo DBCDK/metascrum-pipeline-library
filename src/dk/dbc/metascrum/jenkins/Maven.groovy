@@ -5,14 +5,14 @@ class Maven implements Serializable {
         script.echo "Building and stuff..."
         script.sh "mvn -D sourcepath=src/main/java verify pmd:pmd javadoc:aggregate"
         script.junit testResults: '**/target/*-reports/TEST-*.xml'
-//        step.script {
-//            def ja va = scanForIssues tool: [$class: 'Java']
-//            def javadoc = scanForIssues tool: [$class: 'JavaDoc']
-//            publishIssues issues: [java, javadoc]
-//
-//            def pmd = scanForIssues tool: [$class: 'Pmd'], pattern: '**/target/pmd.xml'
-//            publishIssues issues: [pmd]
-//        }
+        script {
+            def java = scanForIssues tool: [$class: 'Java']
+            def javadoc = scanForIssues tool: [$class: 'JavaDoc']
+            publishIssues issues: [java, javadoc]
+
+            def pmd = scanForIssues tool: [$class: 'Pmd'], pattern: '**/target/pmd.xml'
+            publishIssues issues: [pmd]
+        }
     }
 }
 
