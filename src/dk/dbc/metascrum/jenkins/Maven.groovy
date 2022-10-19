@@ -2,7 +2,7 @@ package dk.dbc.metascrum.jenkins
 
 class Maven implements Serializable {
     static def verify(script, pmdEnabled = true) {
-        script.echo script
+        script.echo script.toString()
         script.sh "mvn -B -D sourcepath=src/main/java verify pmd:pmd javadoc:aggregate"
         script.junit testResults: '**/target/*-reports/TEST-*.xml'
         if (pmdEnabled) {
