@@ -14,7 +14,7 @@ class Maven implements Serializable {
     }
 
     static def deploy(script) {
-        script.sh "mvn -D deploy -Dmaven.test.skip=true"
+        script.sh "mvn deploy -Dmaven.test.skip=true"
     }
 }
 
