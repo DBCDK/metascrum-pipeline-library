@@ -6,7 +6,7 @@ class Maven implements Serializable {
         if(!profiles.isEmpty()) {
             prof = "-P\"${profiles}\""
         }
-        script.sh "mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn verify pmd:pmd javadoc:aggregate"
+        script.sh "mvn -B ${prof} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn verify pmd:pmd javadoc:aggregate"
         script.junit testResults: '**/target/*-reports/TEST-*.xml'
         if (pmdEnabled) {
             def java = script.scanForIssues tool: [$class: 'Java']
