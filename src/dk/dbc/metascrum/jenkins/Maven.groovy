@@ -1,14 +1,14 @@
 package dk.dbc.metascrum.jenkins
 
 class Maven implements Serializable {
-    static def verify(script, pmdEnabled = true, profiles="") {
+    static def verify(script, args = ["pmdEnabled":true]) {
         def prof = ""
-        if(!profiles.isEmpty()) {
-            prof = "-P\"${profiles}\""
+        if(!args.profiles != null) {
+            prof = "-P\"${args.profiles}\""
         }
         script.sh "mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn verify pmd:pmd javadoc:aggregate"
         script.junit testResults: '**/target/*-reports/TEST-*.xml'
-        if (pmdEnabled) {
+        if (args.pmdEnabled) {
             def java = script.scanForIssues tool: [$class: 'Java']
             def javadoc = script.scanForIssues tool: [$class: 'JavaDoc']
             script.publishIssues issues: [java, javadoc]
@@ -17,10 +17,10 @@ class Maven implements Serializable {
         }
     }
 
-    static def deploy(script, projectList = "") {
+    static def deploy(script, args = [:]) {
         def pl = ""
-        if (!projectList.isEmpty()) {
-            pl = "-pl ${projectList} -am"
+        if (!args.projectList != null) {
+            pl = "-pl\"${args.projectList}\" -am"
         }
         script.sh "mvn deploy -Dmaven.test.skip=true ${pl}"
     }
